@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { useTheme } from '../App';  // Import useTheme from your App.js file
-import {ContinueSignUp, ContinueClientRouteType} from '../type';
+import {ContinueSignUp, LoginStackRouteType} from '../type';
 import { RouteProp } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Box } from "native-base";
 
 
 
-const ClientContinueScreen = ({ route }: { route: RouteProp<ContinueClientRouteType, 'ContinueClient'> }) => {
+const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'ContinueClient'> }) => {
   const { email, password } = route.params as ContinueSignUp;
   const { theme } = useTheme();
 
@@ -24,7 +24,7 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<ContinueClientRouteT
     console.log("Info submitted");
   };
 
-  const onDateChange = (event, selectedDate) => {
+  const onDateChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || dob;
     setDob(currentDate);
   };

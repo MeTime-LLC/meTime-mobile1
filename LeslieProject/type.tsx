@@ -1,4 +1,7 @@
 // import { createContext, useContext } from 'react';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
 
 // Define the type for your theme object
 export type Theme = {
@@ -14,14 +17,20 @@ export type ContinueSignUp = {
   password: string
 }
 
-export type ContinueClientRouteType = {
-  SignUpScreen: undefined;
+export type LoginStackRouteType = {
+  Login: undefined;
+  SignUp: undefined;
   ContinueClient: ContinueSignUp;
+  ContinueProvider: ContinueSignUp;
 };
 
 export type RootStackParamList = {
-  SignUpScreen: undefined;
+  Login: undefined;
+  SignUp: undefined;
   ContinueClient: ContinueSignUp;
+  ContinueProvider: ContinueSignUp;
   // Add other routes here
 };
+
+
 

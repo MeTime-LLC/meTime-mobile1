@@ -13,12 +13,17 @@ const SignUpScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [provider, setProvider] = useState(false);
 
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'SignUpScreen'>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'SignUp'>>();
 
   const handleSignUp = () => {
     // Your sign-up logic here
-    if (password === confirmPassword && password && !provider) {
-      navigation.navigate('ContinueClient', { email, password });
+    if (password === confirmPassword && password) {
+      if (!provider) {
+        navigation.navigate('ContinueClient', { email, password });
+      }
+      if (provider) {
+        navigation.navigate('ContinueProvider', { email, password });
+      }
     } else {
       console.log("Passwords do not match");
     }
