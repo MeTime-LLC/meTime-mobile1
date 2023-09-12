@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Input, Button, Icon, Image } from 'react-native-elements';
 import { useTheme } from '../App';  // Import useTheme from your App.js file
 import {ContinueSignUp, LoginStackRouteType} from '../type';
@@ -56,8 +56,8 @@ const ProviderContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteTyp
   // }, [route])
 
   return (
-    <View style={{...styles.container, backgroundColor: theme.background}}>
-      <Text style={{...styles.title, color: theme.textColor}}>Additional Information</Text>
+    <ScrollView contentContainerStyle={{...styles.container, backgroundColor: theme.background}}>
+      <Text style={{...styles.title, color: theme.textColor, marginTop:30}}>Additional Information</Text>
 
       <Input
         placeholder='Company Name'
@@ -132,17 +132,18 @@ const ProviderContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteTyp
       <Button
         title='Submit'
         onPress={handleInfoSubmit}
-        buttonStyle={{backgroundColor: theme.buttonBackgroundColor, marginTop:20}}
+        buttonStyle={{backgroundColor: theme.buttonBackgroundColor, marginTop:20,
+        marginBottom:30}}
         titleStyle={{color: theme.buttonTextColor}}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    // flex: 1,
+    // justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
