@@ -6,6 +6,11 @@ import {ContinueSignUp, LoginStackRouteType} from '../type';
 import { RouteProp } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Box } from "native-base";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import {auth, storage as db} from '../firebase';
+import { collection, doc, setDoc } from "firebase/firestore";
+
+
 
 
 
@@ -21,12 +26,30 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType,
 
   const handleInfoSubmit = () => {
     // Your info-submit logic here
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async(res) => {
+        console.log(res["user"]["uid"]);
+        const userRef = doc(db, 'users', res["user"]["uid"])
+        await setDoc(userRef, {
+          firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: false
+        })
+
+      })
+
+      .catch((err) => console.log(err))
+
     console.log("Info submitted");
   };
 
   const onDateChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || dob;
     setDob(currentDate);
+  };
+
+  const handlePhoneNumberChange = (text:string) => {
+    // Remove non-numeric characters from the input
+    const numericText = text.replace(/[^0-9]/g, '');
+    setPhoneNumber(numericText);
   };
 
   //toCheck
@@ -86,8 +109,9 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType,
         placeholder='Phone Number'
         leftIcon={<Icon name='phone' size={24} color={theme.textColor}/>}
         value={phoneNumber}
-        onChangeText={setPhoneNumber}
+        onChangeText={handlePhoneNumberChange}
         style={{color: theme.textColor}}
+        keyboardType={'numeric'}
       />
 
       <TouchableOpacity onPress={() => { /* Upload picture logic */ }}>

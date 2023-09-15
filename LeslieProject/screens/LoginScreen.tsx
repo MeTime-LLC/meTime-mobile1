@@ -5,6 +5,8 @@ import { useTheme } from '../App';
 import { useNavigation } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { LoginStackRouteType } from '../type';
+import {auth} from '../firebase';
+import {signInWithEmailAndPassword } from "firebase/auth";
 // import SignUpScreen from './SignUpScreen';
 
 const LoginScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'Login'> }) => {
@@ -20,6 +22,13 @@ const LoginScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'Login'>
   const handleLogin = () => {
     // Handle your login logic here
     console.log("Logged in");
+    signInWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        // console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   };
 
   const handleSignUp = () => {

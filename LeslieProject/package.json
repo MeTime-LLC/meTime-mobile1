@@ -16,7 +16,9 @@
     "@react-navigation/stack": "^6.3.17",
     "axios": "^1.5.0",
     "expo": "~49.0.8",
+    "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
+    "firebase": "^10.4.0",
     "native-base": "^3.4.28",
     "react": "18.2.0",
     "react-base": "^0.2.0",
@@ -27,8 +29,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-tab-view": "^3.5.2",
-    "react-native-vector-icons": "^10.0.0",
-    "expo-image-picker": "~14.3.2"
+    "react-native-vector-icons": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

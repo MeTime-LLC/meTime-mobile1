@@ -1,13 +1,14 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
-import {useTheme} from '../App';
+import {useTheme, useUser} from '../App';
 import ContinueClient from './clientContinue';
 import ContinueProvider from './providerContinue'
 import { LoginStackRouteType }  from '../type';
 
 const LoginStack = () => {
   const { theme, isDarkMode } = useTheme();
+  const {user, inputUser} = useUser();
   const Stack = createStackNavigator<LoginStackRouteType>();
   return (
     <Stack.Navigator>
