@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "LeslieProject",
-    "slug": "LeslieProject",
+    "slug": "leslie",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nathanaellm97.leslie"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +26,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3d989179-6323-48ed-b8a4-3cc0356a13bf"
+      }
+    },
+    "owner": "nathanaellm97"
   }
 }

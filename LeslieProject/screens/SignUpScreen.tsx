@@ -3,17 +3,21 @@ import { View, StyleSheet, Text, Switch } from 'react-native';
 import { Input, Button, Icon } from 'react-native-elements';
 import { useTheme } from '../App';
 import { useNavigation } from '@react-navigation/native';
-import {RootStackParamList} from '../type';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { LoginStackRouteType } from '../type';
+import { RouteProp } from '@react-navigation/native';
 
-const SignUpScreen = () => {
+type SignUpScreenNavigationProp = StackNavigationProp<LoginStackRouteType, 'SignUp'>;
+
+
+const SignUpScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'SignUp'> }) => {
   const { theme, isDarkMode } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [provider, setProvider] = useState(false);
 
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'SignUp'>>();
+  const navigation = useNavigation<SignUpScreenNavigationProp>();
 
   const handleSignUp = () => {
     // Your sign-up logic here

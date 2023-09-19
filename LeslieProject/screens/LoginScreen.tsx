@@ -9,6 +9,9 @@ import {auth, db, storage} from '../firebase';
 import {signInWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import {ref, getDownloadURL } from "firebase/storage";
+import { StackNavigationProp } from '@react-navigation/stack';
+
+type LoginScreenNavigationProp = StackNavigationProp<LoginStackRouteType, 'Login'>;
 
 const LoginScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'Login'> }) => {
   const { theme, isDarkMode } = useTheme(); // Moved inside the component
@@ -18,7 +21,7 @@ const LoginScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'Login'>
   const [emailForgetPass, setEmailForgetPass] = useState('')
   const {user, inputUser} = useUser();
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<LoginScreenNavigationProp>();
 
 
   const handleLogin = () => {
