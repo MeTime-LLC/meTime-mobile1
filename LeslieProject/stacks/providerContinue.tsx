@@ -7,6 +7,9 @@ import { RouteProp } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Box } from "native-base";
 import * as ImagePicker from 'expo-image-picker';
+import {auth, db} from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, doc, setDoc } from "firebase/firestore";
 
 
 
@@ -26,6 +29,16 @@ const ProviderContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteTyp
 
   const handleInfoSubmit = () => {
     // Your info-submit logic here
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(async(res) => {
+      console.log(res["user"]["uid"]);
+      const userRef = doc(db, 'users', res["user"]["uid"])
+      await setDoc(userRef, {
+        company, firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: true
+      })
+    })
+
+    .catch((err) => console.log(err, 'this is the err'))
     console.log("Info submitted");
   };
 
@@ -49,6 +62,12 @@ const ProviderContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteTyp
       console.error('ImagePicker is not defined');
     }
   }
+
+  const handlePhoneNumberChange = (text:string) => {
+    // Remove non-numeric characters from the input
+    const numericText = text.replace(/[^0-9]/g, '');
+    setPhoneNumber(numericText);
+  };
 
   //toCheck
   // useEffect(() => {
@@ -115,7 +134,7 @@ const ProviderContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteTyp
         placeholder='Phone Number'
         leftIcon={<Icon name='phone' size={24} color={theme.textColor}/>}
         value={phoneNumber}
-        onChangeText={setPhoneNumber}
+        onChangeText={handlePhoneNumberChange}
         style={{color: theme.textColor}}
       />
 

@@ -1,15 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Switch } from 'react-native';
-import {useTheme} from '../App'
+import { StyleSheet, Text, View, TouchableOpacity, Switch, ScrollView } from 'react-native';
+import { Input, Button, Icon, Image } from 'react-native-elements';
+import {useTheme, useUser} from '../App'
 
 export default function Settings() {
   const { theme, isDarkMode, toggleDarkMode } = useTheme();
+  const {user, inputUser} = useUser();
   return (
-    <View style={{ backgroundColor: theme.background }}>
-      <Text style={{ color: theme.textColor }}>Settings</Text>
+    <ScrollView style={{ backgroundColor: theme.background }}>
         <TouchableOpacity
           style={{
-            backgroundColor: theme.buttonBackgroundColor,
+            backgroundColor: theme.background,
             padding: 10,
             marginTop: 20,
             borderRadius: 5
@@ -27,6 +28,10 @@ export default function Settings() {
           value={isDarkMode}
         />
         </TouchableOpacity>
-    </View>
+        {user && (
+          <Image source={user.image ? {uri: user.image} : require('../assets/ppPlaceholder.png')}
+          style={{ width: 100, height: 100, borderRadius: 100 }}/>
+        )}
+    </ScrollView>
   )
 }

@@ -1,38 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Input, Button, Icon } from 'react-native-elements';
-import { useTheme } from '../App';  // Import useTheme from your App.js file
+import { Input, Button, Icon, Image } from 'react-native-elements';
+import { useTheme, useUser } from '../App';  // Import useTheme from your App.js file
 import {ContinueSignUp, LoginStackRouteType} from '../type';
 import { RouteProp } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Box } from "native-base";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import {auth, storage as db} from '../firebase';
-import { collection, doc, setDoc } from "firebase/firestore";
-
-
-
+import {auth, db} from '../firebase';
+import { doc, setDoc } from "firebase/firestore";
+import * as ImagePicker from 'expo-image-picker';
+import {ref, uploadBytes, getDownloadURL, updateMetadata } from "firebase/storage";
+import RNFS from 'react-native-fs';
+import storage from '@react-native-firebase/storage';
 
 
 const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'ContinueClient'> }) => {
   const { email, password } = route.params as ContinueSignUp;
   const { theme } = useTheme();
+  const {user, inputUser} = useUser();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [dob, setDob] = useState(''); // Date of Birth
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [imageUri, setImageUri] = useState(null);
 
   const handleInfoSubmit = () => {
     // Your info-submit logic here
     createUserWithEmailAndPassword(auth, email, password)
       .then(async(res) => {
-        console.log(res["user"]["uid"]);
-        const userRef = doc(db, 'users', res["user"]["uid"])
-        await setDoc(userRef, {
-          firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: false
-        })
+        let keyId = res["user"]["uid"]
+        const userRef = doc(db, 'users', keyId)
+        let userObj: {[key: string]: any} = {
+          firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: false, image: true
+        }
+        if (imageUri) {
+          // let storageRef = ref(storage, keyId + '.jpg');
+          let storageRef = storage().ref(keyId+'.jpg')
+          RNFS.readFile(imageUri, 'base64')
+            .then((base64Data) => {
+              const metadata = {
+                contentType: 'image/jpeg'
+              }
+              const uploadTask = storageRef.putString(base64Data, 'base64', metadata)
+              uploadTask.on('state_changed',
+                (snapshot) => console.log(snapshot, 'this is snapshot'),
+                (err) => console.log(err),
+                () => {
+                  storageRef.getDownloadURL()
+                    .then((url) => {
+                      userObj.image = url
+                      inputUser(userObj)
+                    })
+                })
+            })
+        } else {
+          await setDoc(userRef, {
+            firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: false, image: false
+          })
+          inputUser(userObj)
+        }
 
       })
 
@@ -52,10 +81,21 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType,
     setPhoneNumber(numericText);
   };
 
-  //toCheck
-  // useEffect(() => {
-  //   console.log(email, password)
-  // }, [route])
+  const selectPhoto = () => {
+    if (ImagePicker) {
+      ImagePicker.launchImageLibraryAsync(
+        {
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        },
+      ).then((res:any) => {setImageUri(res['assets'][0].uri)})
+      .catch((err:any) => console.log(err))
+    } else {
+      console.error('ImagePicker is not defined');
+    }
+  }
 
   return (
     <View style={{...styles.container, backgroundColor: theme.background}}>
@@ -114,9 +154,15 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType,
         keyboardType={'numeric'}
       />
 
-      <TouchableOpacity onPress={() => { /* Upload picture logic */ }}>
+      <TouchableOpacity onPress={selectPhoto}>
         <Text style={{...styles.uploadText, color: theme.textColor}}>Upload Picture</Text>
       </TouchableOpacity>
+      {imageUri === null ? (
+        <Image source={require('../assets/ppPlaceholder.png')}
+        style={{ width: 100, height: 100, borderRadius: 100 }}/>
+      ) :
+      ( <Image source={{uri: imageUri}}
+        style={{ width: 100, height: 100, borderRadius: 100 }}/>)}
 
       <Button
         title='Submit'

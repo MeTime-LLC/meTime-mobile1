@@ -9,10 +9,8 @@ import SettingsScreen from './screens/Settings';
 import LoginStack from './stacks/loginStack';
 import {Theme} from './type' // make sure this type aligns with your theme object
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
-// import { onAuthStateChanged } from "firebase/auth";
-import {auth, db} from './firebase';
 import SignOut from './screens/SignOut';
+import { useEffect } from 'react';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,28 +61,12 @@ export default function App() {
   const inputUser = (userData:any) => {
     setUser(userData)
   }
-  if (auth) {
-    auth.onAuthStateChanged(async(authUser:any) => {
-      // console.log("UID:1", authUser);
-      if (authUser) {
-        let key = authUser.uid;
-        // console.log("UID:", key);
-
-        // Ensure that Firestore is correctly initialized and 'db' points to your Firestore instance.
-        let userRef = doc(db, 'users', key)
-        let userData = await getDoc(userRef)
-        let theUser:any = userData.data()
-        theUser.DOB = new Date(theUser.DOB.seconds * 1000)
-        inputUser(theUser)
-      } else {
-        console.log("User is not authenticated.");
-        inputUser(null)
-      }
-    })
-  }
-
-
   const theme = isDarkMode ? darkTheme : lightTheme;
+
+    useEffect(() => {
+    // navigation.navigate('Home')
+    console.log(user, 'this is the user')
+  }, [user])
 
   return (
     <UserContext.Provider value={{user, inputUser}}>

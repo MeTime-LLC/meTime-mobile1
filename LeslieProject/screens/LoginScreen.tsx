@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Modal, TouchableOpacity } from 'react-native';
 import { Input, Button, Icon, } from 'react-native-elements';
-import { useTheme } from '../App';
+import { useTheme, useUser } from '../App';
 import { useNavigation } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { LoginStackRouteType } from '../type';
-import {auth} from '../firebase';
+import {auth, db, storage} from '../firebase';
 import {signInWithEmailAndPassword } from "firebase/auth";
-// import SignUpScreen from './SignUpScreen';
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import {ref, getDownloadURL } from "firebase/storage";
 
 const LoginScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'Login'> }) => {
   const { theme, isDarkMode } = useTheme(); // Moved inside the component
@@ -15,6 +16,7 @@ const LoginScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'Login'>
   const [password, setPassword] = useState('');
   const [forgetVisible, setForgetVisible] = useState(false);
   const [emailForgetPass, setEmailForgetPass] = useState('')
+  const {user, inputUser} = useUser();
 
   const navigation = useNavigation();
 
@@ -23,8 +25,19 @@ const LoginScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'Login'>
     // Handle your login logic here
     console.log("Logged in");
     signInWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        // console.log(res)
+      .then(async(res) => {
+          let key = res.user.uid;
+          // Ensure that Firestore is correctly initialized and 'db' points to your Firestore instance.
+          let userRef = doc(db, 'users', key)
+          let userData = await getDoc(userRef)
+          let theUser:any = userData.data()
+          theUser.DOB = new Date(theUser.DOB.seconds * 1000)
+          if (theUser.image) {
+            let imageRef = ref(storage, key+'.jpg')
+            await getDownloadURL(imageRef)
+              .then((url) => theUser.image = url)
+          }
+          inputUser(theUser)
       })
       .catch((err) => {
         console.log(err)
