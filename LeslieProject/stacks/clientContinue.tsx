@@ -7,12 +7,11 @@ import { RouteProp } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Box } from "native-base";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import {auth, db} from '../firebase';
+import {auth, db, storage} from '../firebase';
 import { doc, setDoc } from "firebase/firestore";
 import * as ImagePicker from 'expo-image-picker';
-import {ref, uploadBytes, getDownloadURL, updateMetadata } from "firebase/storage";
-import RNFS from 'react-native-fs';
-import storage from '@react-native-firebase/storage';
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
+
 
 
 const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType, 'ContinueClient'> }) => {
@@ -25,7 +24,7 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType,
   const [dob, setDob] = useState(''); // Date of Birth
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
   const handleInfoSubmit = () => {
     // Your info-submit logic here
@@ -37,25 +36,19 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType,
           firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: false, image: true
         }
         if (imageUri) {
-          // let storageRef = ref(storage, keyId + '.jpg');
-          let storageRef = storage().ref(keyId+'.jpg')
-          RNFS.readFile(imageUri, 'base64')
-            .then((base64Data) => {
-              const metadata = {
-                contentType: 'image/jpeg'
-              }
-              const uploadTask = storageRef.putString(base64Data, 'base64', metadata)
-              uploadTask.on('state_changed',
-                (snapshot) => console.log(snapshot, 'this is snapshot'),
-                (err) => console.log(err),
-                () => {
-                  storageRef.getDownloadURL()
-                    .then((url) => {
-                      userObj.image = url
-                      inputUser(userObj)
-                    })
-                })
+          let storageRef = ref(storage, keyId+'.jpg')
+          const response = await fetch(imageUri);
+          const blob = await response.blob();
+          uploadBytes(storageRef, blob)
+            .then(async(snapshot) => {
+              let url = await getDownloadURL(snapshot.ref)
+              userObj.image = url
+              setDoc(userRef, {
+                firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: false, image: true
+              })
+              inputUser(userObj)
             })
+            .catch((err) => {console.log(err, 'hhhahhss')})
         } else {
           await setDoc(userRef, {
             firstName, lastName, DOB: dob, address, phone: phoneNumber, email, provider: false, image: false
@@ -89,8 +82,15 @@ const ClientContinueScreen = ({ route }: { route: RouteProp<LoginStackRouteType,
           allowsEditing: true,
           aspect: [4, 3],
           quality: 1,
+          base64:true
         },
-      ).then((res:any) => {setImageUri(res['assets'][0].uri)})
+      )
+      .then((res:any) => {
+        if (!res.canceled && res.base64) {
+          const base64Data = `data:image/jpeg;base64,${res.base64}`;
+          setImageUri(base64Data); // now base64Data can be used directly for upload
+        }
+      })
       .catch((err:any) => console.log(err))
     } else {
       console.error('ImagePicker is not defined');
