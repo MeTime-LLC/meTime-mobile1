@@ -19,6 +19,7 @@
       "bundleIdentifier": "com.nathanaellm97.leslie"
     },
     "android": {
+      "package": "com.nathanaellm97.leslie", // This line is added
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

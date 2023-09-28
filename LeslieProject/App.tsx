@@ -1,34 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { useState, useContext, createContext } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NativeBaseProvider, Box, Button } from "native-base";
-import HomeScreen from './screens/HomeScreen';
-import SettingsScreen from './screens/Settings';
-import LoginStack from './stacks/loginStack';
-import {Theme} from './type' // make sure this type aligns with your theme object
-import Icon from 'react-native-vector-icons/FontAwesome';
-import SignOut from './screens/SignOut';
-import { useEffect } from 'react';
+import { StatusBar } from "expo-status-bar"
+import { StyleSheet, Text, View } from "react-native"
+import { useState, useContext, createContext } from "react"
+import { NavigationContainer } from "@react-navigation/native"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { NativeBaseProvider, Box, Button } from "native-base"
+import HomeScreen from "./screens/HomeScreen"
+import SettingsScreen from "./screens/Settings"
+import LoginStack from "./stacks/loginStack"
+import { Theme } from "./type" // make sure this type aligns with your theme object
+import Icon from "react-native-vector-icons/FontAwesome"
+import SignOut from "./screens/SignOut"
+import { useEffect } from "react"
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 const darkTheme = {
-  background: '#000',  // add this line
-  backgroundColor: '#000',
-  textColor: '#fff',
-  buttonBackgroundColor: '#333',
-  buttonTextColor: '#fff',
-};
+  background: "#000", // add this line
+  backgroundColor: "#000",
+  textColor: "#fff",
+  buttonBackgroundColor: "#333",
+  buttonTextColor: "#fff",
+}
 
 const lightTheme = {
-  background: '#fff',  // add this line
-  backgroundColor: '#fff',
-  textColor: '#000',
-  buttonBackgroundColor: '#eee',
-  buttonTextColor: '#000',
-};
+  background: "#fff", // add this line
+  backgroundColor: "#fff",
+  textColor: "#000",
+  buttonBackgroundColor: "#eee",
+  buttonTextColor: "#000",
+}
 
 const ThemeContext = createContext<{
   theme: Theme;
@@ -38,131 +38,174 @@ const ThemeContext = createContext<{
   theme: lightTheme as unknown as Theme, // Provide initial values for the theme
   isDarkMode: false,
   toggleDarkMode: () => {},
-});
+})
 
 const UserContext = createContext<{
   user: any;
-  inputUser: (userData:any) => void;
+  inputUser: (userData: any) => void;
 }>({
-  user:null,
+  user: null,
   inputUser: (userData) => {},
 })
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => useContext(ThemeContext)
 export const useUser = () => useContext(UserContext)
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [user, setUser] = useState(null)
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+    setIsDarkMode(!isDarkMode)
+  }
 
-  const inputUser = (userData:any) => {
+  const inputUser = (userData: any) => {
     setUser(userData)
   }
-  const theme = isDarkMode ? darkTheme : lightTheme;
+  const theme = isDarkMode ? darkTheme : lightTheme
 
-    useEffect(() => {
+  useEffect(() => {
     // navigation.navigate('Home')
-    console.log(user, 'this is the user')
+    console.log(user, "this is the user")
   }, [user])
 
   return (
-    <UserContext.Provider value={{user, inputUser}}>
-    <ThemeContext.Provider value={{ theme, isDarkMode, toggleDarkMode }}>
-      <NativeBaseProvider>
-        <NavigationContainer>
-        <Tab.Navigator
-            key={isDarkMode ? 'dark' : 'light'}
-            screenOptions={{
-              tabBarActiveTintColor: theme.buttonTextColor,
-              tabBarInactiveTintColor: theme.textColor,
-              tabBarStyle: {
-                backgroundColor: theme.backgroundColor,
-              },
-            }}
-          >
-            <Tab.Screen name="Home" component={HomeScreen}
+    <UserContext.Provider value={{ user, inputUser }}>
+      <ThemeContext.Provider value={{ theme, isDarkMode, toggleDarkMode }}>
+        <NativeBaseProvider>
+          <NavigationContainer>
+            <Tab.Navigator
+              key={isDarkMode ? "dark" : "light"}
+              screenOptions={{
+                tabBarActiveTintColor: theme.buttonTextColor,
+                tabBarInactiveTintColor: theme.textColor,
+                tabBarStyle: {
+                  backgroundColor: theme.backgroundColor,
+                },
+              }}
+            >
+              <Tab.Screen
+                name="Home"
+                component={HomeScreen}
                 options={{
                   headerStyle: {
                     backgroundColor: theme.backgroundColor,
                   },
                   headerTintColor: theme.textColor,
                   tabBarLabel: ({ focused }) => (
-                    <Text style={{ color: focused ? theme.buttonTextColor : theme.textColor }}>
+                    <Text
+                      style={{
+                        color: focused
+                          ? theme.buttonTextColor
+                          : theme.textColor,
+                      }}
+                    >
                       Home
                     </Text>
                   ),
                   tabBarIcon: ({ focused }) => (
-                    <View style={{
-                      backgroundColor: focused ? theme.buttonBackgroundColor : 'transparent',
-                      borderRadius: 10,
-                      padding: 5
-                    }}>
+                    <View
+                      style={{
+                        backgroundColor: focused
+                          ? theme.buttonBackgroundColor
+                          : "transparent",
+                        borderRadius: 10,
+                        padding: 5,
+                      }}
+                    >
                       <Icon name="home" size={20} color={theme.textColor} />
                     </View>
                   ),
-                }}/>
-            <Tab.Screen name="Settings" component={SettingsScreen}
+                }}
+              />
+              <Tab.Screen
+                name="Settings"
+                component={SettingsScreen}
                 options={{
                   headerStyle: {
                     backgroundColor: theme.backgroundColor,
                   },
                   headerTintColor: theme.textColor,
                   tabBarLabel: ({ focused }) => (
-                    <Text style={{ color: focused ? theme.buttonTextColor : theme.textColor }}>
+                    <Text
+                      style={{
+                        color: focused
+                          ? theme.buttonTextColor
+                          : theme.textColor,
+                      }}
+                    >
                       Settings
                     </Text>
                   ),
                   tabBarIcon: ({ focused }) => (
-                    <View style={{
-                      backgroundColor: focused ? theme.buttonBackgroundColor : 'transparent',
-                      borderRadius: 10,
-                      padding: 5
-                    }}>
+                    <View
+                      style={{
+                        backgroundColor: focused
+                          ? theme.buttonBackgroundColor
+                          : "transparent",
+                        borderRadius: 10,
+                        padding: 5,
+                      }}
+                    >
                       <Icon name="gear" size={20} color={theme.textColor} />
                     </View>
                   ),
-                }}/>
-            {!user ? (
-              <Tab.Screen name="LoginStack" component={LoginStack}
-              options={{
-                headerShown: false,
-                tabBarIcon: ({ focused }) => (
-                  <View style={{
-                    backgroundColor: focused ? theme.buttonBackgroundColor : 'transparent',
-                    borderRadius: 10,
-                    padding: 5
-                  }}>
-                    <Icon name="lock" size={20} color={theme.textColor} />
-                  </View>
-                ),
-              }}/>
-            ): (
-              <Tab.Screen name="SignOut" component={SignOut}
-              options={{
-                headerShown: false,
-                tabBarIcon: ({ focused }) => (
-                  <View style={{
-                    backgroundColor: focused ? theme.buttonBackgroundColor : 'transparent',
-                    borderRadius: 10,
-                    padding: 5
-                  }}>
-                    <Icon name="sign-out" size={20} color={theme.textColor} />
-                  </View>
-                ),
-              }}/>
-            )}
-          </Tab.Navigator>
-          <StatusBar style={isDarkMode ? 'light' : 'dark'} />
-        </NavigationContainer>
-      </NativeBaseProvider>
-    </ThemeContext.Provider>
+                }}
+              />
+              {!user ? (
+                <Tab.Screen
+                  name="LoginStack"
+                  component={LoginStack}
+                  options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused }) => (
+                      <View
+                        style={{
+                          backgroundColor: focused
+                            ? theme.buttonBackgroundColor
+                            : "transparent",
+                          borderRadius: 10,
+                          padding: 5,
+                        }}
+                      >
+                        <Icon name="lock" size={20} color={theme.textColor} />
+                      </View>
+                    ),
+                  }}
+                />
+              ) : (
+                <Tab.Screen
+                  name="SignOut"
+                  component={SignOut}
+                  options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused }) => (
+                      <View
+                        style={{
+                          backgroundColor: focused
+                            ? theme.buttonBackgroundColor
+                            : "transparent",
+                          borderRadius: 10,
+                          padding: 5,
+                        }}
+                      >
+                        <Icon
+                          name="sign-out"
+                          size={20}
+                          color={theme.textColor}
+                        />
+                      </View>
+                    ),
+                  }}
+                />
+              )}
+            </Tab.Navigator>
+            <StatusBar style={isDarkMode ? "light" : "dark"} />
+          </NavigationContainer>
+        </NativeBaseProvider>
+      </ThemeContext.Provider>
     </UserContext.Provider>
-  );
+  )
 }
-
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -172,4 +215,3 @@ export default function App() {
 //     justifyContent: 'center',
 //   },
 // });
-
