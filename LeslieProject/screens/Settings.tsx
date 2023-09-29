@@ -1,5 +1,12 @@
 import React, { useState } from "react"
-import { Text, View, TouchableOpacity, Switch, ScrollView } from "react-native"
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Switch,
+  ScrollView,
+  StyleSheet,
+} from "react-native"
 import { Input, Icon, Image } from "react-native-elements"
 import { useTheme, useUser } from "../App"
 import { db } from "../firebase"
@@ -32,7 +39,9 @@ export default function Settings() {
         backgroundColor: theme.background,
         alignItems: "center",
         justifyContent: "center",
+        alignContent: "center",
         height: "100%",
+        width: "100%"
       }}
     >
       <TouchableOpacity
@@ -67,10 +76,11 @@ export default function Settings() {
           contentContainerStyle={{
             justifyContent: "center",
             alignItems: "center",
-            width: 400,
+            alignContent: "center",
+            width: "100%",
           }}
         >
-          <TouchableOpacity style={{ margin: 10 }}>
+          <TouchableOpacity style={{ margin: "10%" }}>
             <Image
               source={
                 user.image
@@ -87,13 +97,7 @@ export default function Settings() {
           </TouchableOpacity>
           {/* First name */}
           <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
-              width: 320,
-            }}
+            style={styles.input}
             onPress={() => setFNedit(false)}
           >
             <Input
@@ -103,9 +107,10 @@ export default function Settings() {
                 <Icon name="person" size={24} color={theme.textColor} />
               }
               onChangeText={setFirstName}
-              style={{ color: theme.textColor, marginLeft: 8 }} // Adjust margin as needed
+              style={{ color: theme.textColor}} // Adjust margin as needed
               disabled={fnEdit}
               onPressIn={() => setFNedit(false)}
+              containerStyle={styles.inputContainer}
             />
             {!fnEdit && (
               <>
@@ -116,14 +121,7 @@ export default function Settings() {
                     updateDoc(userRef, { firstName })
                     setFNedit(true)
                   }}
-                  style={{
-                    backgroundColor: "green",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.greenCheck}
                 >
                   <Icon name={"check"} size={20} color={"white"} />
                 </TouchableOpacity>
@@ -133,14 +131,7 @@ export default function Settings() {
                     setFNedit(true)
                     setFirstName(user.firstName)
                   }}
-                  style={{
-                    backgroundColor: "red",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.redCross}
                 >
                   <Icon name={"close"} size={20} color={"white"} />
                 </TouchableOpacity>
@@ -149,13 +140,7 @@ export default function Settings() {
           </TouchableOpacity>
           {/* Last name */}
           <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
-              width: 320,
-            }}
+            style={styles.input}
             onPress={() => setLNedit(false)}
           >
             <Input
@@ -168,36 +153,23 @@ export default function Settings() {
               style={{ color: theme.textColor }}
               disabled={lnEdit}
               onPressIn={() => setLNedit(false)}
+              containerStyle={styles.inputContainer}
             />
             {!lnEdit && (
               <>
                 <TouchableOpacity
                   // onPress={onPress}
-                  style={{
-                    backgroundColor: "green",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.greenCheck}
                 >
                   <Icon name={"check"} size={20} color={"white"} />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   onPress={() => {
-                    setLNedit(true)
-                    setLastName(user.lastName)
+                    setLNedit(true);
+                    setLastName(user.lastName);
                   }}
-                  style={{
-                    backgroundColor: "red",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.redCross}
                 >
                   <Icon name={"close"} size={20} color={"white"} />
                 </TouchableOpacity>
@@ -207,13 +179,7 @@ export default function Settings() {
 
           {/* PHONE */}
           <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
-              width: 320,
-            }}
+            style={styles.input}
             onPress={() => setPhoneEdit(false)}
           >
             <Input
@@ -224,19 +190,13 @@ export default function Settings() {
               style={{ color: theme.textColor }}
               disabled={phoneEdit}
               onPressIn={() => setPhoneEdit(false)}
+              containerStyle={styles.inputContainer}
             />
             {!phoneEdit && (
               <>
                 <TouchableOpacity
                   // onPress={onPress}
-                  style={{
-                    backgroundColor: "green",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.greenCheck}
                 >
                   <Icon name={"check"} size={20} color={"white"} />
                 </TouchableOpacity>
@@ -246,14 +206,7 @@ export default function Settings() {
                     setPhoneEdit(true)
                     setPhoneNumber(user.phone)
                   }}
-                  style={{
-                    backgroundColor: "red",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.redCross}
                 >
                   <Icon name={"close"} size={20} color={"white"} />
                 </TouchableOpacity>
@@ -262,13 +215,7 @@ export default function Settings() {
           </TouchableOpacity>
           {/* Address */}
           <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
-              width: 320,
-            }}
+            style={styles.input}
             onPress={() => setAddressEdit(false)}
           >
             <Input
@@ -281,19 +228,13 @@ export default function Settings() {
               style={{ color: theme.textColor }}
               disabled={addressEdit}
               onPressIn={() => setAddressEdit(false)}
+              containerStyle={styles.inputContainer}
             />
             {!addressEdit && (
               <>
                 <TouchableOpacity
                   // onPress={onPress}
-                  style={{
-                    backgroundColor: "green",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.greenCheck}
                 >
                   <Icon name={"check"} size={20} color={"white"} />
                 </TouchableOpacity>
@@ -303,14 +244,7 @@ export default function Settings() {
                     setAddressEdit(true)
                     setAddress(user.address)
                   }}
-                  style={{
-                    backgroundColor: "red",
-                    padding: 0,
-                    borderRadius: 5,
-                    width: 20,
-                    height: 20,
-                    alignItems: "center",
-                  }}
+                  style={styles.redCross}
                 >
                   <Icon name={"close"} size={20} color={"white"} />
                 </TouchableOpacity>
@@ -319,13 +253,7 @@ export default function Settings() {
           </TouchableOpacity>
           {/* Email */}
           <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
-              width: 320,
-            }}
+            style={styles.input}
             onPress={() =>
               alert("please contact customer service to change email")
             }
@@ -340,6 +268,7 @@ export default function Settings() {
               onPressIn={() => {
                 alert("please contact customer service to change email")
               }}
+              containerStyle={styles.inputContainer}
             />
           </TouchableOpacity>
         </ScrollView>
@@ -347,3 +276,33 @@ export default function Settings() {
     </View>
   )
 }
+const styles = StyleSheet.create({
+  greenCheck: {
+    alignItems: "center",
+    justifyContent:'center',
+    backgroundColor: "green",
+    borderRadius: 5,
+    height: 20,
+    padding: 0,
+    width: 20,
+    marginRight: 10
+  },
+  redCross: {
+    backgroundColor: "red",
+    padding: 0,
+    borderRadius: 5,
+    width: 20,
+    height: 20,
+    alignItems: "center",
+  },
+  input: {
+    alignContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    width: "80%",
+  },
+  inputContainer: {
+    width:'90%'
+  },
+})

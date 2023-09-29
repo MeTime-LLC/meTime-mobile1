@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.1.0
+
+jobs:
+  install_dependencies:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-key: "package-lock.json"
+
+  build_android:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-key: "package-lock.json"
+      - run:
+          name: Install eas-cli
+          command: npm install -g eas-cli
+      - run:
+          name: EAS Login
+          command: echo "$EXPO_CLI_PASSWORD" | eas login --non-interactive --username=$EXPO_CLI_USERNAME
+      - run:
+          name: Build Android
+          command: eas build --platform android
+      - run:
+          name: Get Build URL
+          command: echo "Check the build at $(eas build:url $(eas build:list --json | jq -r '.data[0].id'))"
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - install_dependencies
+      - build_android:
+          requires:
+            - install_dependencies
