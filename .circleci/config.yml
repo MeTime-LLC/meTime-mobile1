@@ -17,12 +17,12 @@ jobs:
             cd LeslieProject
             rm -rf node_modules
             npm cache clean --force
-            npm install
+            npm install || (cat /home/circleci/.npm/_logs/2023-09-29T22_02_47_371Z-debug.log && exit 1)
       - run:
           name: Install specific package
           command: |
             cd LeslieProject
-            npm install @react-native-community/datetimepicker
+            npm install @react-native-community/datetimepicker || (cat /home/circleci/.npm/_logs/2023-09-29T22_02_47_371Z-debug.log && exit 1)
 
   build_android:
     executor:
