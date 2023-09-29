@@ -9,16 +9,14 @@ jobs:
       name: node/default
     steps:
       - checkout
-      - node/install-packages:
-          cache-key: "package-lock.json"
+      - node/install-packages
 
   build_android:
     executor:
       name: node/default
     steps:
       - checkout
-      - node/install-packages:
-          cache-key: "package-lock.json"
+      - node/install-packages
       - run:
           name: Install eas-cli
           command: npm install -g eas-cli
