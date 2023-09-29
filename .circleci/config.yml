@@ -12,17 +12,17 @@ jobs:
       - node/install-packages:
           app-dir: LeslieProject
       - run:
-          name: Clean npm cache and reinstall node modules
+          name: Clean npm cache, Remove node_modules and package-lock.json and Reinstall
           command: |
             cd LeslieProject
-            rm -rf node_modules
             npm cache clean --force
-            npm install || (cat /home/circleci/.npm/_logs/2023-09-29T22_02_47_371Z-debug.log && exit 1)
+            rm -rf node_modules package-lock.json
+            npm install || (cat /home/circleci/.npm/_logs/*-debug.log && exit 1)
       - run:
           name: Install specific package
           command: |
             cd LeslieProject
-            npm install @react-native-community/datetimepicker || (cat /home/circleci/.npm/_logs/2023-09-29T22_02_47_371Z-debug.log && exit 1)
+            npm install @react-native-community/datetimepicker || (cat /home/circleci/.npm/_logs/*-debug.log && exit 1)
 
   build_android:
     executor:
