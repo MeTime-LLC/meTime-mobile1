@@ -11,6 +11,18 @@ jobs:
       - checkout
       - node/install-packages:
           app-dir: LeslieProject
+      - run:
+          name: Clean npm cache and reinstall node modules
+          command: |
+            cd LeslieProject
+            rm -rf node_modules
+            npm cache clean --force
+            npm install
+      - run:
+          name: Install specific package
+          command: |
+            cd LeslieProject
+            npm install @react-native-community/datetimepicker
 
   build_android:
     executor:
