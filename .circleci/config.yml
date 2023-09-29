@@ -9,14 +9,16 @@ jobs:
       name: node/default
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
+          app-dir: LeslieProject
 
   build_android:
     executor:
       name: node/default
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
+          app-dir: LeslieProject
       - run:
           name: Install eas-cli
           command: npm install -g eas-cli
