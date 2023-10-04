@@ -162,7 +162,7 @@ const LoginScreen = ({
 const styles = StyleSheet.create({
   SignUpForget: {
     // flex: 0,
-    bottom: "-20%",
+    bottom: "-3%",
     justifyContent: "center",
     alignItems: "center",
   },
