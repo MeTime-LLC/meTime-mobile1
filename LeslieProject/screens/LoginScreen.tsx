@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, StyleSheet, Text, Modal, TouchableOpacity } from "react-native"
+import { View, StyleSheet, Text, Modal, TouchableOpacity, Image } from "react-native"
 import { Input, Button, Icon } from "react-native-elements"
 import { useTheme, useUser } from "../App"
 import { useNavigation } from "@react-navigation/native"
@@ -64,6 +64,21 @@ const LoginScreen = ({
 
   return (
     <View style={{ ...styles.container, backgroundColor: theme.background }}>
+      <View
+        style={{
+          ...styles.imageContainer,
+          backgroundColor: theme.background,
+        }}
+      >
+        <Image
+          source={
+            isDarkMode
+              ? require("../assets/white-logo.png")
+              : require("../assets/logo.png")
+          }
+          style={styles.image}
+        />
+      </View>
       <Text style={{ ...styles.title, color: theme.textColor }}>Welcome!</Text>
       <Input
         placeholder="Email"
@@ -183,6 +198,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     maxHeight: "90%",
     top: 90,
+  },
+  image: {
+    height: "80%",
+    // marginTop: 30,
+    width: "100%",
+    // aspectRatio: 1
+  },
+  imageContainer: {
+    alignItems: "center",
+    height: 300,
+    justifyContent: "center",
+    width: "100%",
   },
   modalButtonText: {
     color: "white",
