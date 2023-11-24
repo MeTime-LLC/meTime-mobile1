@@ -1,22 +1,22 @@
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable react/react-in-jsx-scope */
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { useState, useContext, createContext } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NativeBaseProvider, Box, Button } from "native-base";
-import HomeScreen from "./stacks/Home/HomeScreen"
-import HomeNav from "./stacks/Home/HomeNav"
-import SettingsScreen from "./screens/Settings";
-import LoginStack from "./stacks/loginStack";
-import { Theme } from "./type"; // make sure this type aligns with your theme object
-import Icon from "react-native-vector-icons/FontAwesome";
-import SignOut from "./screens/SignOut";
-import { useEffect } from "react";
-import { PaperProvider } from "react-native-paper";
+import { StatusBar } from "expo-status-bar"
+import { StyleSheet, Text, View } from "react-native"
+import { useState, useContext, createContext } from "react"
+import { NavigationContainer } from "@react-navigation/native"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { NativeBaseProvider, Box, Button } from "native-base"
+import HomeScreen from "./stacks/Home/HomeScreen";
+import HomeNav from "./stacks/Home/HomeNav";
+import SettingsScreen from "./screens/Settings"
+import LoginStack from "./stacks/loginStack"
+import { Theme } from "./type" // make sure this type aligns with your theme object
+import Icon from "react-native-vector-icons/FontAwesome"
+import SignOut from "./screens/SignOut"
+import { useEffect } from "react"
+import { PaperProvider } from "react-native-paper"
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 const darkTheme = {
   background: "#000", // add this line
@@ -24,7 +24,7 @@ const darkTheme = {
   textColor: "#fff",
   buttonBackgroundColor: "#333",
   buttonTextColor: "#fff",
-};
+}
 
 const lightTheme = {
   background: "#fff", // add this line
@@ -32,7 +32,7 @@ const lightTheme = {
   textColor: "#000",
   buttonBackgroundColor: "#eee",
   buttonTextColor: "#000",
-};
+}
 
 const ThemeContext = createContext<{
   theme: Theme;
@@ -42,7 +42,7 @@ const ThemeContext = createContext<{
   theme: lightTheme as unknown as Theme, // Provide initial values for the theme
   isDarkMode: false,
   toggleDarkMode: () => {},
-});
+})
 
 const UserContext = createContext<{
   user: any;
@@ -50,27 +50,27 @@ const UserContext = createContext<{
 }>({
   user: null,
   inputUser: (userData) => {},
-});
+})
 
-export const useTheme = () => useContext(ThemeContext);
-export const useUser = () => useContext(UserContext);
+export const useTheme = () => useContext(ThemeContext)
+export const useUser = () => useContext(UserContext)
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [user, setUser] = useState(null)
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode(!isDarkMode)
   }
 
   const inputUser = (userData: any) => {
-    setUser(userData);
+    setUser(userData)
   }
-  const theme = isDarkMode ? darkTheme : lightTheme;
+  const theme = isDarkMode ? darkTheme : lightTheme
 
   useEffect(() => {
     // navigation.navigate('Home')
-    console.log(user, "this is the user");
-  }, [user]);
+    console.log(user, "this is the user")
+  }, [user])
 
   return (
     <UserContext.Provider value={{ user, inputUser }}>
@@ -161,7 +161,7 @@ export default function App() {
                   <Tab.Screen
                     name="LoginStack"
                     component={LoginStack}
-                    options={{
+                    options={({ navigation }) => ({
                       headerShown: false,
                       tabBarIcon: ({ focused }) => (
                         <View
@@ -176,7 +176,22 @@ export default function App() {
                           <Icon name="lock" size={20} color={theme.textColor} />
                         </View>
                       ),
-                    }}
+                      // Custom animation for the 'LoginStack' screen
+                      cardStyleInterpolator: ({ current, next, layouts }) => {
+                        return {
+                          cardStyle: {
+                            transform: [
+                              {
+                                translateX: current.progress.interpolate({
+                                  inputRange: [0, 1],
+                                  outputRange: [layouts.screen.width, 0],
+                                }),
+                              },
+                            ],
+                          },
+                        }
+                      },
+                    })}
                   />
                 ) : (
                   <Tab.Screen
@@ -211,7 +226,7 @@ export default function App() {
         </PaperProvider>
       </ThemeContext.Provider>
     </UserContext.Provider>
-  );
+  )
 }
 
 // const styles = StyleSheet.create({

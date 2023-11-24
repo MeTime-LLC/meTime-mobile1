@@ -3,14 +3,25 @@ import React, { useContext, useEffect } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { useTheme, useUser } from "../../App";
 import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const { theme, isDarkMode } = useTheme();
   const { user } = useUser();
+  const navigation = useNavigation()
   //to Check
   useEffect(() => {
     console.log("tooooo check", isDarkMode);
   }, [isDarkMode]);
+
+  const redirect = () => {
+    if (!user) {
+      navigation.navigate("LoginStack", {
+        // Add custom animation options
+        animation: "slide-in",
+      });
+    }
+  };
   return (
     <ScrollView
       key={isDarkMode ? "dark" : "light"}
@@ -48,6 +59,7 @@ export default function HomeScreen() {
           fontSize: 18, // Text size
           fontWeight: "bold", // Text weight
         }}
+        onPress={redirect}
       >
         Press Here to Get Started!
       </Button>
