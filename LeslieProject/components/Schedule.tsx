@@ -1,44 +1,44 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Alert } from "react-native";
-import { Agenda } from "react-native-calendars";
-import { Card } from "react-native-paper";
+import React, { useState } from "react"
+import { View, TouchableOpacity, Text, Alert } from "react-native"
+import { Agenda } from "react-native-calendars"
+import { Card } from "react-native-paper"
 
 interface Appointment {
-  day: string;
-  time: string;
-  duration: number;
-  description: string;
+  day: string
+  time: string
+  duration: number
+  description: string
 }
 
 interface AgendaItem {
-  name: string;
-  startTime: string;
-  endTime: string;
-  duration: number;
-  day: string;
-  id: string;
-  height: number;
-  details: string;
+  name: string
+  startTime: string
+  endTime: string
+  duration: number
+  day: string
+  id: string
+  height: number
+  details: string
 }
 
 const timeToString = (time: number): string => {
-  const date = new Date(time);
-  return date.toISOString().split("T")[0];
-};
+  const date = new Date(time)
+  return date.toISOString().split("T")[0]
+}
 
 const formatTime = (time: number): string => {
-  const date = new Date(time);
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
-};
+  const date = new Date(time)
+  const hours = date.getHours()
+  const minutes = date.getMinutes()
+  return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`
+}
 
-const Test: React.FC = () => {
-  const [items, setItems] = useState<{ [key: string]: AgendaItem[] }>({});
+const Schedule: React.FC = () => {
+  const [items, setItems] = useState<{ [key: string]: AgendaItem[] }>({})
 
   const loadItems = () => {
     setItems((prevItems) => {
-      let updatedItems: { [key: string]: AgendaItem[] } = {};
+      const updatedItems: { [key: string]: AgendaItem[] } = {}
 
       // Sample appointments
       const appointments: Appointment[] = [
@@ -84,24 +84,26 @@ const Test: React.FC = () => {
           duration: 30,
           description: "Hair cut for Kat",
         },
-      ];
+      ]
 
       appointments.forEach((appointment, index) => {
-        const [year, month, day] = appointment.day.split("-");
-        const [hour, minute] = appointment.time.split(":");
+        const [year, month, day] = appointment.day.split("-")
+        const [hour, minute] = appointment.time.split(":")
         const startTime = new Date(
           parseInt(year),
           parseInt(month) - 1,
           parseInt(day),
           parseInt(hour),
           parseInt(minute)
-        );
-        const endTime = new Date(startTime.getTime() + appointment.duration * 60000);
+        )
+        const endTime = new Date(
+          startTime.getTime() + appointment.duration * 60000
+        )
 
-        const key = timeToString(startTime.getTime());
+        const key = timeToString(startTime.getTime())
 
         if (!updatedItems[key]) {
-          updatedItems[key] = [];
+          updatedItems[key] = []
         }
 
         updatedItems[key].push({
@@ -113,15 +115,15 @@ const Test: React.FC = () => {
           id: `${key}-${index}`,
           height: Math.max(100, Math.floor((appointment.duration / 30) * 100)),
           details: `Details for ${appointment.description}`,
-        });
-      });
+        })
+      })
 
-      return updatedItems;
-    });
-  };
+      return updatedItems
+    })
+  }
 
   const renderItem = (item: AgendaItem) => {
-    const { startTime, endTime } = item;
+    const { startTime, endTime } = item
 
     return (
       <TouchableOpacity
@@ -138,15 +140,15 @@ const Test: React.FC = () => {
               }}
             >
               <Text style={{ fontWeight: "600" }}>{`${formatTime(
-                new Date(startTime).getTime(),
+                new Date(startTime).getTime()
               )} to ${formatTime(new Date(endTime).getTime())}`}</Text>
               <Text>{item.name}</Text>
             </View>
           </Card.Content>
         </Card>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -157,7 +159,7 @@ const Test: React.FC = () => {
         renderItem={renderItem}
       />
     </View>
-  );
-};
+  )
+}
 
-export default Test;
+export default Schedule
